@@ -399,6 +399,7 @@ tr.pulse td{animation:pb .9s ease 2}
 #loginView{overflow-x:hidden}
 .lg-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;padding:calc(env(safe-area-inset-top) + 2rem) 1.5rem 3.5rem;position:relative;z-index:2}
 .lg-hero .logo{animation:lgPop .8s cubic-bezier(.2,1.4,.4,1) both;box-shadow:0 0 0 8px rgba(245,166,35,.12),0 10px 30px rgba(0,0,0,.35)}
+.lg-hero .lglogo{width:92px;height:92px;border-radius:24px;object-fit:cover;display:block;animation:lgPop .8s cubic-bezier(.2,1.4,.4,1) both;box-shadow:0 0 0 8px rgba(245,166,35,.12),0 10px 30px rgba(0,0,0,.35)}
 .lg-hero h1{font-size:2rem;font-weight:900;letter-spacing:.12em;margin-top:.9rem;animation:lgUp .6s .15s both}
 .lg-hero p{font-size:.78rem;color:#CBD5E1;margin-top:.25rem;animation:lgUp .6s .25s both}
 .lgbox{position:relative;z-index:3;width:100%;max-width:440px;background:#fff;border-radius:28px 28px 0 0;padding:1.6rem 1.4rem calc(1.6rem + env(safe-area-inset-bottom));
@@ -1319,7 +1320,8 @@ kv(doc,112,148,54,'Bag.Pelaks. Kegiatan',I.bagian);
 </script>
 <div class="view" id="homeView">
   <header class="home-hero">
-    <h1><span class="logo logo-lg"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M9 3c-2.3 2.9-4.2 5.9-4.2 8.1a4.2 4.2 0 0 0 8.4 0c0-2.2-1.9-5.2-4.2-8.1z"/><path d="M16.3 9.3c-1.4 1.9-2.6 3.8-2.6 5.2a2.6 2.6 0 0 0 5.2 0c0-1.4-1.2-3.3-2.6-5.2z"/></svg></span>IRIGATE</h1>
+  <img class="lglogo" src="icon-irigate-192.png" alt="Logo IRIGATE">
+      <h1>IRIGATE</h1>
     <p style="font-weight:600">Integrated Irrigation Operation &amp; Maintenance System (Sistem Operasi dan Pemeliharaan Irigasi Terintegrasi)</p>
     <p>Dinas PUPR Provinsi NTT, Bidang Sumber Daya Air · v0.5</p>
   </header>
