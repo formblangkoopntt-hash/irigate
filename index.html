@@ -437,15 +437,15 @@ tr.pulse td{animation:pb .9s ease 2}
 .lgwave{position:absolute;left:-8%;bottom:0;width:116%;height:55%;z-index:1;opacity:.5;pointer-events:none}
 .lgwave path{animation:lgWave 9s ease-in-out infinite alternate}
 .lgwave path:nth-child(2){animation-duration:13s;animation-direction:alternate-reverse;opacity:.6}
-.lgdrop{position:absolute;z-index:1;width:10px;height:14px;background:rgba(245,166,35,.55);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:lgFall linear infinite;pointer-events:none}
+.lgdrop{position:absolute;top:-30px;z-index:1;width:7px;height:18px;background:linear-gradient(180deg,rgba(245,166,35,0),rgba(255,200,80,.95));border-radius:50% 50% 50% 50%/70% 70% 30% 30%;animation:lgFall linear infinite;pointer-events:none}
 @keyframes lgUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes lgPop{from{opacity:0;transform:scale(.4) rotate(-15deg)}to{opacity:1;transform:none}}
 @keyframes lgSheet{from{transform:translateY(100%)}to{transform:none}}
 @keyframes lgWave{from{transform:translateX(-4%)}to{transform:translateX(4%)}}
-@keyframes lgFall{0%{transform:translateY(-30px);opacity:0}15%{opacity:1}100%{transform:translateY(60vh);opacity:0}}
+@keyframes lgFall{0%{transform:translateY(0) scale(var(--s,1));opacity:0}10%{opacity:1}100%{transform:translateY(105vh) scale(var(--s,1));opacity:.25}}
 @keyframes lgShake{20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
 @media(min-width:700px){.lg{justify-content:center}.lg-hero{flex:none;padding-bottom:1.5rem}.lgbox{border-radius:28px;margin-bottom:2rem}.lgbox::before{display:none}}
-@media(prefers-reduced-motion:reduce){.lg *,.lgbox{animation:none!important}}
+@media(prefers-reduced-motion:reduce){.lg *:not(.lgdrop):not(.lglogo),.lgbox{animation:none!important}}
 .ubar{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;margin-bottom:1rem}
 .ubar .tag{background:var(--p)}
 .lgfoot,.appfoot{text-align:center;font-size:.74rem;color:var(--mu);line-height:1.7}
@@ -461,10 +461,7 @@ tr.pulse td{animation:pb .9s ease 2}
 <!-- ═════════ LOGIN ═════════ -->
 <div class="view active" id="loginView">
   <div class="lg">
-    <i class="lgdrop" style="left:12%;animation-duration:5s"></i>
-    <i class="lgdrop" style="left:32%;animation-duration:7s;animation-delay:1.5s"></i>
-    <i class="lgdrop" style="left:58%;animation-duration:6s;animation-delay:.8s"></i>
-    <i class="lgdrop" style="left:82%;animation-duration:8s;animation-delay:2.5s"></i>
+    
     <svg class="lgwave" viewBox="0 0 400 200" preserveAspectRatio="none"><path d="M-20 80 Q60 40 140 80 T300 80 T460 80 V200 H-20Z" fill="#2563EB"/><path d="M-20 110 Q70 70 160 110 T320 110 T480 110 V200 H-20Z" fill="#F5A623"/></svg>
 
     <div class="lg-hero">
@@ -2550,6 +2547,17 @@ function printHTML(kind,f,daily,kodeDI){
   $('sum6box').innerHTML=tsumHTML('sum6','tw6');
   $('sum8box').innerHTML=tsumHTML('sum8','tw8');
   initDefaults();
+(function(){
+  var lg=document.querySelector('#loginView .lg');if(!lg)return;
+  var h='';
+  for(var i=0;i<70;i++){
+    h+='<i class="lgdrop" style="left:'+(Math.random()*100).toFixed(1)+'%;'+
+       'animation-duration:'+(0.8+Math.random()*1).toFixed(2)+'s;'+
+       'animation-delay:-'+(Math.random()*3).toFixed(2)+'s;'+
+       '--s:'+(.6+Math.random()*.8).toFixed(2)+'"></i>';
+  }
+  lg.insertAdjacentHTML('afterbegin',h);
+})();
   onMode8();
 /* label kolom otomatis untuk tabel .rsp (isi dari <thead>, ikut baris yang dirender ulang) */
 function autoLabel(t){
