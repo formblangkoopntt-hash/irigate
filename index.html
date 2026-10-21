@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+     <link rel="manifest" href="manifest.json">
+   <meta name="theme-color" content="#0B1E3D">
+   <link rel="apple-touch-icon" href="icon-192.png">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <meta charset="UTF-8" />
@@ -2549,5 +2552,12 @@ function initRsp(){
 }
 initRsp();})();
 </script>
+     <script>
+   if ('serviceWorker' in navigator) {
+     window.addEventListener('load', function () {
+       navigator.serviceWorker.register('sw.js');
+     });
+   }
+   </script>
 </body>
 </html>
