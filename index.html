@@ -14,10 +14,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--p:#0B1E3D;--pd:#071326;--pl:#162c50;--a:#F5A623;--cn:#132746;--ok:#10B981;--dg:#EF4444;--bg:#F8FAFC;--bd:#E2E8F0;--tx:#0F172A;--mu:#64748B;--r:20px;--rs:12px;--sh:0 10px 30px -5px rgba(11,30,61,.08)}
 body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased}
-.home-hero .lglogo{width:64px;height:64px;border-radius:18px;object-fit:cover;display:block;margin:0 auto .6rem}
-     @media(prefers-reduced-motion:reduce){
-  .lg-hero .lglogo{animation:kedipKuning 2.4s ease-in-out infinite!important}
-}
+.home-hero .lglogo{width:64px;height:64px;border-radius:18px;object-fit:cover;display:block;margin:0 auto .6rem;border:3px solid #FFD400;animation:kedipKuning 1.4s ease-in-out infinite}
 .rkw{display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-start;margin-bottom:.8rem}
 .rkw .rfil{flex:1 1 280px;margin-bottom:0}
 .rkb{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;flex:1 1 340px}
@@ -456,6 +453,7 @@ tr.pulse td{animation:pb .9s ease 2}
 .appfoot{padding:1.5rem 1rem 2rem;margin-top:2rem;border-top:1px solid var(--bd)}
 .lgfoot a,.appfoot a{color:var(--p);font-weight:700;text-decoration:none}
 .lgfoot a:hover,.appfoot a:hover{color:var(--a);text-decoration:underline}
+@media(prefers-reduced-motion:reduce){#loginView .lg .lg-hero .lglogo{animation:kedipKuning 2.4s ease-in-out infinite!important}}
 #loginView.active ~ .appfoot{display:none}
 </style>
 
