@@ -440,6 +440,12 @@ tr.pulse td{animation:pb .9s ease 2}
 @media(prefers-reduced-motion:reduce){.lg *,.lgbox{animation:none!important}}
 .ubar{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;margin-bottom:1rem}
 .ubar .tag{background:var(--p)}
+.lgfoot,.appfoot{text-align:center;font-size:.74rem;color:var(--mu);line-height:1.7}
+.lgfoot{margin-top:1.2rem}
+.appfoot{padding:1.5rem 1rem 2rem;margin-top:2rem;border-top:1px solid var(--bd)}
+.lgfoot a,.appfoot a{color:var(--p);font-weight:700;text-decoration:none}
+.lgfoot a:hover,.appfoot a:hover{color:var(--a);text-decoration:underline}
+#loginView.active ~ .appfoot{display:none}
 </style>
 
 <!-- ═════════ LOGIN ═════════ -->
@@ -481,6 +487,7 @@ tr.pulse td{animation:pb .9s ease 2}
       <button class="btn btn-sub" onclick="doLogin()">Masuk</button>
       <button class="btn btn-prev lgkat" onclick="openApp('viewKatalog')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/></svg>Katalog Blanko Digital</button>
+               <div class="lgfoot">© <span class="thn">2026</span> IRIGATE · Dinas PUPR Provinsi NTT<br>Made by <a href="https://www.instagram.com/amanmhrn/" target="_blank" rel="noopener">Amanda Putri Maharani</a></div>
     </div>
   </div>
 </div>
@@ -1562,7 +1569,7 @@ kv(doc,112,148,54,'Bag.Pelaks. Kegiatan',I.bagian);
   <div class="bt"><button class="btn btn-sub" onclick="snap()">Ambil Foto</button><button class="btn btn-prev" onclick="closeCam()">Batal</button></div>
 </div>
 <input type="file" id="camFallback" accept="image/*" capture="environment" style="display:none" />
-
+<footer class="appfoot">© <span class="thn">2026</span> IRIGATE · Dinas PUPR Provinsi NTT. Seluruh hak cipta dilindungi.<br>Made by <a href="https://www.instagram.com/amanmhrn/" target="_blank" rel="noopener">Amanda Putri Maharani</a></footer>
 <div class="toast-wrap" id="toastWrap"></div>
 <div class="spin" id="spin"><i></i><div id="spinL">Memproses...</div></div>
 
@@ -2511,6 +2518,7 @@ function printHTML(kind,f,daily,kodeDI){
 
 /* ════════ INIT ════════ */
 (function(){
+     qa('.thn').forEach(function(e){e.textContent=new Date().getFullYear()});
     function pasangDI(){
     var s=$('diSelect'),cur=s.value;
     s.innerHTML='<option value="">-- Pilih Daerah Irigasi --</option>'+DI_LIST.map(function(d){return'<option value="'+ea(d)+'">'+d+'</option>'}).join('');
