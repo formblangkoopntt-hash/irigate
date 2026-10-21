@@ -1,5 +1,5 @@
 var CACHE = 'irigate-v1';
-var ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
+var ASSETS = ['./', './index.html', './manifest.json', './icon-irigate-192.png', './icon-irigate-512.png'];
 
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(ASSETS); }));
