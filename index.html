@@ -2610,5 +2610,33 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+
+  <script>
+var deferredInstall = null;
+window.addEventListener('beforeinstallprompt', function (e) {
+  e.preventDefault(); deferredInstall = e;
+  document.getElementById('btnInstall').style.display = '';
+});
+document.getElementById('btnInstall').addEventListener('click', function () {
+  if (!deferredInstall) return;
+  deferredInstall.prompt();
+  deferredInstall.userChoice.then(function () {
+    deferredInstall = null;
+    document.getElementById('btnInstall').style.display = 'none';
+  });
+});
+window.addEventListener('appinstalled', function () {
+  document.getElementById('btnInstall').style.display = 'none';
+});
+var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+var standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+if (isIOS && !standalone) document.getElementById('iosHint').style.display = '';
+</script>
+  <div id="offBar" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9999;background:#EF4444;color:#fff;text-align:center;font:700 .8rem Inter;padding:.4rem">
+  Tidak ada koneksi internet — data tidak dapat disimpan.</div>
+<script>
+function cekOnline(){document.getElementById('offBar').style.display=navigator.onLine?'none':'block'}
+window.addEventListener('online',cekOnline);window.addEventListener('offline',cekOnline);cekOnline();
+</script>
 </body>
 </html>
