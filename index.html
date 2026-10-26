@@ -2582,12 +2582,28 @@ function initRsp(){
 }
 initRsp();})();
 </script>
-     <script>
-   if ('serviceWorker' in navigator) {
-     window.addEventListener('load', function () {
-       navigator.serviceWorker.register('sw.js');
-     });
-   }
-   </script>
+  <script>
+if ('serviceWorker' in navigator) {
+  var hadCtrl = !!navigator.serviceWorker.controller;
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').then(function (reg) {
+      reg.addEventListener('updatefound', function () {
+        var nw = reg.installing;
+        nw.addEventListener('statechange', function () {
+          if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+            if (confirm('Versi baru IRIGATE tersedia. Muat ulang sekarang?\n(Isian yang belum disimpan akan hilang.)'))
+              nw.postMessage('SKIP_WAITING');
+          }
+        });
+      });
+    });
+    var reloading = false;
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      if (!hadCtrl || reloading) return;   // jangan reload pada kunjungan pertama
+      reloading = true; location.reload();
+    });
+  });
+}
+</script>
 </body>
 </html>
