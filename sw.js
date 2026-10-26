@@ -1,4 +1,4 @@
-var CACHE = 'irigate-v3';
+var CACHE = 'irigate-v4';
 var SHELL = ['./', './index.html', './antrean.js', './manifest.json',
   './icon-irigate-192.png', './icon-irigate-512.png'];
 var CDN = [
