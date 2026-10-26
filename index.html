@@ -624,10 +624,11 @@ tr.pulse td{animation:pb .9s ease 2}
 /* ════════ SESI & LOGIN ════════ */
 var SES=null, lgM='petugas', uData=[];
 var LG_PFX='5300';
-var SES_KEY='irigate_token';
-function sessSave(t){try{sessionStorage.setItem(SES_KEY,t)}catch(e){}}
-function sessLoad(){try{return sessionStorage.getItem(SES_KEY)||''}catch(e){return ''}}
-function sessClear(){try{sessionStorage.removeItem(SES_KEY)}catch(e){}}
+var SES_KEY='irigate_token', USR_KEY='irigate_user';
+function sessSave(t){try{localStorage.setItem(SES_KEY,t);localStorage.setItem(USR_KEY,JSON.stringify(SES))}catch(e){}}
+function sessLoad(){try{return localStorage.getItem(SES_KEY)||''}catch(e){return ''}}
+function sessLoadUser(){try{return JSON.parse(localStorage.getItem(USR_KEY)||'null')}catch(e){return null}}
+function sessClear(){try{localStorage.removeItem(SES_KEY);localStorage.removeItem(USR_KEY)}catch(e){}}
 function sessResume(){
   var t=sessLoad();if(!t)return;
   spin('Memulihkan sesi...');
@@ -635,7 +636,12 @@ function sessResume(){
     unspin();
     if(!r||!r.success){sessClear();return}
     SES=r.user;SES.token=r.token;afterLogin();
-  }).withFailureHandler(function(){unspin();sessClear()}).cekSesi(t);
+  }).withFailureHandler(function(e){
+    unspin();
+    var u=sessLoadUser();
+    if(u&&u.token===t&&isNetErr(e)){SES=u;afterLogin();toast('Mode offline: data baru dikirim saat ada internet.','info')}
+    else sessClear();
+  }).cekSesi(t);
 }
 document.addEventListener('DOMContentLoaded',sessResume);
 function lgSet(){
@@ -867,11 +873,17 @@ function simpanPk(){
 var DM={},DM_CUSTOM=[],DM_F={ambang_lebar:['b'],romijn:['b'],cipoletti:['b'],parshall:['W'],pintu_sorong:['a','lb','cd'],mercu_bendung:['b','c']};
 var DM_USERS={};
 DM_F.pelampung=['bentuk','B1','B2','L'];
-function loadDI(){   // dipanggil setelah login: isi DI_CFG dari server
+function loadDI(){
   google.script.run.withSuccessHandler(function(r){
     if(!r||!r.success)return;
     DI_CFG=r.data||{};
+    try{localStorage.setItem('irigate_dicfg_'+SES.kode,JSON.stringify(DI_CFG))}catch(e){}
     if(SES&&SES.role!=='ADMIN'){updAdm();applyLocks()}
+  }).withFailureHandler(function(){
+    try{
+      var c=localStorage.getItem('irigate_dicfg_'+SES.kode);
+      if(c){DI_CFG=JSON.parse(c);if(SES.role!=='ADMIN'){updAdm();applyLocks()}}
+    }catch(e){}
   }).getDimensi(SES.token);
 }
 function dmBuild(){
@@ -1600,11 +1612,20 @@ function makeRunner() {
       if (name === 'withFailureHandler') return function(f){ fail = f; return proxy; };
       return function() {
         var args = [].slice.call(arguments);
-        fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // hindari preflight CORS
-          body: JSON.stringify({ fn: name, args: args })
-        })
+        return function() {
+  var args = [].slice.call(arguments);
+  var ac = new AbortController();
+  var tm = setTimeout(function(){ ac.abort(); }, 45000);
+  fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ fn: name, args: args }),
+    signal: ac.signal
+  })
+  .then(function(r){ clearTimeout(tm); return r.json(); })
+  .then(function(j){ if (j.ok) ok(j.data); else fail(new Error(j.error)); })
+  .catch(function(e){ clearTimeout(tm); fail(e); });
+};
         .then(function(r){ return r.json(); })
         .then(function(j){ if (j.ok) ok(j.data); else fail(new Error(j.error)); })
         .catch(fail);
@@ -1688,8 +1709,13 @@ function applyRumus(rows){rows.forEach(function(r){
   try{var vs=(r.v||'').split(',').filter(Boolean);FX[r.k]={expr:r.f,run:compileFx(r.f,vs)}}catch(e){}})}
 function fx(k,o){var x=FX[k];if(!x)return null;var v=x.run(o);return isFinite(v)?v:null}
 function fxTxt(k,o){var x=FX[k];if(!x)return '';var e=x.expr;Object.keys(o).forEach(function(n){e=e.replace(new RegExp('\\b'+n+'\\b','g'),o[n])});return e}
-function loadRumus(){google.script.run.withSuccessHandler(function(r){if(r&&r.success)applyRumus(r.data)}).getRumus(SES.token)}
-/* nilai bawaan (dipakai sampai rumus dari server termuat) */
+function loadRumus(){
+  google.script.run.withSuccessHandler(function(r){
+    if(r&&r.success){applyRumus(r.data);try{localStorage.setItem('irigate_rumus',JSON.stringify(r.data))}catch(e){}}
+  }).withFailureHandler(function(){
+    try{var c=localStorage.getItem('irigate_rumus');if(c)applyRumus(JSON.parse(c))}catch(e){}
+  }).getRumus(SES.token);
+}/* nilai bawaan (dipakai sampai rumus dari server termuat) */
 applyRumus([
  {k:'ambang_lebar',f:'1.71*b*pow(H,1.5)',v:'b,H'},{k:'romijn',f:'1.71*b*pow(H,1.5)',v:'b,H'},
  {k:'cipoletti',f:'1.859*b*pow(H,1.5)',v:'b,H'},{k:'thompson',f:'1.379*pow(H,2.5)',v:'H'},
