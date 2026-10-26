@@ -1629,23 +1629,17 @@ function makeRunner() {
       if (name === 'withFailureHandler') return function(f){ fail = f; return proxy; };
       return function() {
         var args = [].slice.call(arguments);
-        return function() {
-  var args = [].slice.call(arguments);
-  var ac = new AbortController();
-  var tm = setTimeout(function(){ ac.abort(); }, 45000);
-  fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ fn: name, args: args }),
-    signal: ac.signal
-  })
-  .then(function(r){ clearTimeout(tm); return r.json(); })
-  .then(function(j){ if (j.ok) ok(j.data); else fail(new Error(j.error)); })
-  .catch(function(e){ clearTimeout(tm); fail(e); });
-};
-        .then(function(r){ return r.json(); })
+        var ac = new AbortController();
+        var tm = setTimeout(function(){ ac.abort(); }, 45000);
+        fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ fn: name, args: args }),
+          signal: ac.signal
+        })
+        .then(function(r){ clearTimeout(tm); return r.json(); })
         .then(function(j){ if (j.ok) ok(j.data); else fail(new Error(j.error)); })
-        .catch(fail);
+        .catch(function(e){ clearTimeout(tm); fail(e); });
       };
     }
   });
