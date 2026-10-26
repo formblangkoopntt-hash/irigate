@@ -624,24 +624,39 @@ tr.pulse td{animation:pb .9s ease 2}
 /* ════════ SESI & LOGIN ════════ */
 var SES=null, lgM='petugas', uData=[];
 var LG_PFX='5300';
-var SES_KEY='irigate_token', USR_KEY='irigate_user';
-function sessSave(t){try{localStorage.setItem(SES_KEY,t);localStorage.setItem(USR_KEY,JSON.stringify(SES))}catch(e){}}
-function sessLoad(){try{return localStorage.getItem(SES_KEY)||''}catch(e){return ''}}
-function sessLoadUser(){try{return JSON.parse(localStorage.getItem(USR_KEY)||'null')}catch(e){return null}}
-function sessClear(){try{localStorage.removeItem(SES_KEY);localStorage.removeItem(USR_KEY)}catch(e){}}
+var SES_KEY='irigate_sesi', SES_MAX_MS=3*86400000;
+function sessSave(t,exp){
+  try{localStorage.setItem(SES_KEY,JSON.stringify({token:t,user:SES,exp:exp||(Date.now()+SES_MAX_MS)}))}catch(e){}
+}
+function sessGet(){
+  try{
+    var s=JSON.parse(localStorage.getItem(SES_KEY)||'null');
+    return(s&&s.token&&s.user&&s.exp>Date.now())?s:null;
+  }catch(e){return null}
+}
+function sessClear(){try{localStorage.removeItem(SES_KEY)}catch(e){}}
+
+function bukaOffline(s){
+  SES=s.user;SES.token=s.token;afterLogin();
+  toast('Mode offline. Sesi berlaku sampai '+new Date(s.exp).toLocaleString('id-ID')+'.','info');
+}
 function sessResume(){
-  var t=sessLoad();if(!t)return;
+  var s=sessGet(),raw=null;
+  try{raw=localStorage.getItem(SES_KEY)}catch(e){}
+  if(!s){
+    if(raw)toast(navigator.onLine?'Sesi berakhir. Silakan masuk kembali.':'Sesi habis. Sambungkan internet untuk masuk kembali.','error');
+    sessClear();return;
+  }
+  if(!navigator.onLine){bukaOffline(s);return}
   spin('Memulihkan sesi...');
   google.script.run.withSuccessHandler(function(r){
     unspin();
-    if(!r||!r.success){sessClear();return}
-    SES=r.user;SES.token=r.token;afterLogin();
+    if(!r||!r.success){sessClear();toast('Sesi berakhir. Silakan masuk kembali.','error');return}
+    SES=r.user;SES.token=r.token;sessSave(r.token,r.exp);afterLogin();
   }).withFailureHandler(function(e){
     unspin();
-    var u=sessLoadUser();
-    if(u&&u.token===t&&isNetErr(e)){SES=u;afterLogin();toast('Mode offline: data baru dikirim saat ada internet.','info')}
-    else sessClear();
-  }).cekSesi(t);
+    if(isNetErr(e))bukaOffline(s);else sessClear();
+  }).cekSesi(s.token);
 }
 document.addEventListener('DOMContentLoaded',sessResume);
 function lgSet(){
@@ -687,12 +702,12 @@ function doLogin(){
   if(lgM==='petugas'&&!/^\d{10}$/.test(kode)){er.textContent='Kode harus 10 angka.';return}
   if(lgM==='admin'&&!/^\d{4,8}$/.test(kode)){er.textContent='Username admin tidak valid.';return}
   if(lgM==='admin'&&!pass){er.textContent='Password wajib diisi.';return}
+    if(!navigator.onLine){er.textContent='Tidak ada internet. Masuk dengan akun baru wajib online.';return}
   er.textContent='';spin('Memeriksa akun...');
   google.script.run.withSuccessHandler(function(r){
     unspin();
     if(!r.success){er.textContent=r.message;return}
-    SES=r.user;SES.token=r.token;
-        SES=r.user;SES.token=r.token;sessSave(r.token);
+        SES=r.user;SES.token=r.token;sessSave(r.token,r.exp);
     document.getElementById('lgPass').value='';lgMode('petugas');
     afterLogin();
   }).withFailureHandler(function(e){unspin();er.textContent='Gagal: '+e.message}).login(lgM,kode,pass);
@@ -738,6 +753,7 @@ function afterLogin(){
   toast('Selamat datang, '+SES.nama+'.','success');
 }
 function doLogout(){
+  if(!navigator.onLine){toast('Keluar akun hanya bisa saat ada internet, agar Anda tidak terkunci di luar aplikasi.','error');return}
   if(!confirm('Keluar dari aplikasi? Isian yang belum disimpan akan hilang.'))return;
     var t=SES&&SES.token;if(t)google.script.run.logout(t);
   sessClear();
@@ -2131,6 +2147,7 @@ function onT6(d){
 var HIST6=[],HIST6loaded=false;
 function hariIni(n){return Math.min(new Date().getDate(),n)}
 function loadHarian6(cb){
+   if(!navigator.onLine){HIST6=[];cb&&cb();return}
   spin('Memuat riwayat data harian...');
   google.script.run.withSuccessHandler(function(r){
     unspin();HIST6=(r&&r.success)?(r.daily||[]):[];cb&&cb();
@@ -2307,6 +2324,7 @@ function info8(){
 /* v0.3.1 — Data Harian Real-time (08-O) */
 var HIST8=[];
 function loadHarian8(cb){
+  if(!navigator.onLine){HIST6=[];cb&&cb();return}
   spin('Memuat riwayat data harian...');
   google.script.run.withSuccessHandler(function(r){
     unspin();HIST8=(r&&r.success)?(r.daily||[]):[];cb&&cb();
