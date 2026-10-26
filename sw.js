@@ -1,5 +1,5 @@
-var CACHE = 'irigate-v2';   // NAIKKAN angka ini setiap kali index.html diubah
-var SHELL = ['./', './index.html', './manifest.json',
+var CACHE = 'irigate-v3';
+var SHELL = ['./', './index.html', './antrean.js', './manifest.json',
   './icon-irigate-192.png', './icon-irigate-512.png'];
 var CDN = [
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
