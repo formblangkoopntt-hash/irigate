@@ -11,7 +11,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="icon-irigate-192.png">
   <link rel="icon" type="image/png" href="icon-irigate-192.png">
-<title>IRIGATE — Integrated Irrigation Operation & Maintenance System (Sistem Operasi dan Pemeliharaan Irigasi Terintegrasi)</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <title>IRIGATE — Integrated Irrigation Operation & Maintenance System (Sistem Operasi dan Pemeliharaan Irigasi Terintegrasi)</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -387,8 +389,7 @@ tr.pulse td{animation:pb .9s ease 2}
 <body>
 
 <!-- ═════════ DASHBOARD ═════════ -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
 <style>
   .kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.1rem}
 .kc{background:#fff;border:1.5px solid var(--bd);border-radius:var(--r);padding:1.4rem;cursor:pointer;box-shadow:var(--sh)}
@@ -2582,7 +2583,7 @@ function initRsp(){
 }
 initRsp();})();
 </script>
-  <script>
+<script>
 if ('serviceWorker' in navigator) {
   var hadCtrl = !!navigator.serviceWorker.controller;
   window.addEventListener('load', function () {
@@ -2599,7 +2600,7 @@ if ('serviceWorker' in navigator) {
     });
     var reloading = false;
     navigator.serviceWorker.addEventListener('controllerchange', function () {
-      if (!hadCtrl || reloading) return;   // jangan reload pada kunjungan pertama
+      if (!hadCtrl || reloading) return;
       reloading = true; location.reload();
     });
   });
