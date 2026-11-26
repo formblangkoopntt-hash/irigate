@@ -2699,5 +2699,70 @@ if (isIOS && !standalone) document.getElementById('iosHint').style.display = '';
 function cekOnline(){document.getElementById('offBar').style.display=navigator.onLine?'none':'block'}
 window.addEventListener('online',cekOnline);window.addEventListener('offline',cekOnline);cekOnline();
 </script>
+ <style>
+/* v1.1 — textbox lebih menonjol untuk petugas */
+.wrap label,.vbox label{font-size:.86rem;font-weight:800;color:#0B1E3D}
+
+/* kolom yang BOLEH diisi: latar krem, garis tebal, bayangan dalam */
+.wrap input[type=text],.wrap input[type=number],.wrap input[type=password],
+.wrap select,.wrap textarea,
+.vbox input[type=text],.vbox input[type=number],.vbox input[type=password],.vbox textarea{
+  background-color:#FFFBEA;
+  border:2px solid #6B7F9E;
+  border-radius:12px;
+  color:#0B1E3D;
+  font-weight:600;
+  box-shadow:inset 0 2px 4px rgba(11,30,61,.07),0 1px 0 rgba(11,30,61,.05);
+  transition:border-color .15s,box-shadow .15s,background-color .15s;
+}
+.wrap input:not([readonly]):not(:disabled):hover,
+.wrap select:not(:disabled):hover,.wrap textarea:not(:disabled):hover{border-color:#0B1E3D}
+
+/* saat diketik: menyala kuning-emas */
+.wrap input:not([readonly]):not(:disabled):focus,
+.wrap select:focus,.wrap textarea:focus,
+.vbox input:focus,.vbox textarea:focus{
+  background-color:#fff;
+  border-color:#F5A623;
+  box-shadow:0 0 0 4px rgba(245,166,35,.35);
+  outline:none;
+}
+
+/* panah dropdown lebih jelas */
+.wrap select{
+  appearance:none;-webkit-appearance:none;padding-right:2.4rem;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230B1E3D' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat:no-repeat;background-position:right .85rem center;
+}
+
+/* kolom terkunci / otomatis: abu-abu, garis putus-putus (jelas tidak perlu diisi) */
+.wrap input[readonly]:not(.q),.wrap input.lk,.wrap select.lk,.wrap select:disabled{
+  background-color:#EEF2F7;border:2px dashed #B6C2D3;color:#475569;font-weight:500;box-shadow:none;
+}
+.wrap input.q[readonly]{border:2px solid rgba(245,166,35,.7)}   /* hasil hitung debit */
+
+/* baris HARI INI: kolom isian paling mencolok */
+.stk tr.today .inp:not(:disabled):not([readonly]),
+.stk tr.today .mini:not(:disabled){
+  background-color:#FFF4CC;
+  border:2.5px solid #F5A623;
+  box-shadow:0 0 0 3px rgba(245,166,35,.25),inset 0 2px 4px rgba(11,30,61,.06);
+}
+.stk tr.today .inp:not(:disabled):not([readonly]):focus,
+.stk tr.today .mini:not(:disabled):focus{
+  background-color:#fff;border-color:#D97706;box-shadow:0 0 0 5px rgba(245,166,35,.4);
+}
+
+/* riwayat hari sebelumnya: redup, hanya-baca */
+.stk tr.past .inp:disabled,.stk tr.past .mini:disabled{
+  background-color:#F1F5F9;border:2px dashed #CBD5E1;color:#94A3B8;box-shadow:none;
+}
+
+/* di HP: isian lebih besar */
+@media(max-width:700px){
+  .wrap input[type=text],.wrap input[type=number],.wrap select,.wrap textarea{font-size:16px}
+  .tw .stk .inp:not(:disabled):not([readonly]){height:56px;font-size:20px}
+}
+</style>
 </body>
 </html>
